@@ -1,6 +1,8 @@
 const axios = require('axios');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const db = require('../database/dbConfig');
+const jwt = require('jsonwebtoken');
+
 const secret = process.env.JWT_SECRET;
 
 const { authenticate } = require('../auth/authenticate');
@@ -24,9 +26,7 @@ function generateToken(user) {
 
 async function register(req, res) {
 	let user = req.body;
-	// generate hash from user's password
 	const hash = bcrypt.hashSync(user.password, 8);
-	// override user.password with hash
 	user.password = hash;
 
 	try {
@@ -43,8 +43,8 @@ async function login(req, res) {
 	const user = await db('users')
 		.where('username', username)
 		.first();
-	console.log(user);
 	console.log(username);
+	console.log(user.username);
 	if (user && bcrypt.compareSync(password, user.password)) {
 		try {
 			const token = generateToken(user);
