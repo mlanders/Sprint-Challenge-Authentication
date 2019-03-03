@@ -14,4 +14,9 @@ server.use(morgan('dev'));
 
 configureRoutes(server);
 
+server.get('/', (req, res) => {
+	res.send('Sanity Check');
+});
+
+
 module.exports = server;
